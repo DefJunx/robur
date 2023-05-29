@@ -11,14 +11,15 @@ datasource db {
 }
 
 model Player {
-  id     String   @id @default(cuid())
-  name   String
-  role   String
-  dob    DateTime
-  teamId String
-  photo  Bytes
+  id         String   @id @default(cuid())
+  name       String
+  role       String?
+  birthPlace String
+  dob        DateTime
+  teamId     String
+  photoUrl   String?
 
-  Team Team @relation(fields: [teamId], references: [id])
+  team Team @relation(fields: [teamId], references: [id])
 }
 
 model Pitch {
@@ -36,7 +37,7 @@ model Team {
 
   homeMatches  Match[]        @relation("homeMatch")
   awayMatches  Match[]        @relation("awayMatch")
-  pitchAddress Pitch          @relation(fields: [pitchId], references: [id])
+  pitch        Pitch          @relation(fields: [pitchId], references: [id])
   TeamStanding TeamStanding[]
   roster       Player[]
 }

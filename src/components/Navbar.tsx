@@ -1,6 +1,6 @@
 "use client";
 
-import useWindowInnerWidth from "@/app/hooks/useWindowInnerWidth";
+import useWindowInnerWidth from "@/hooks/useWindowInnerWidth";
 import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
@@ -12,8 +12,6 @@ const Navbar = () => {
   });
 
   useEffect(() => {
-    console.log(isMobile, "ismobile");
-
     setIsMenuOpen(!isMobile);
   }, [isMobile]);
 

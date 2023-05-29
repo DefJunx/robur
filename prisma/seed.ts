@@ -13,13 +13,27 @@ async function main() {
     });
   }
 
-  const robur = await prisma.team.findFirst({ where: { name: { contains: "robur" } } });
+  let robur = await prisma.team.findFirst({ where: { name: { contains: "robur" } } });
 
   if (!robur) {
     console.log("Robur not available, seeding it");
 
-    await prisma.team.create({
-      data: { name: "ASD Robur Natisa", pitchId: pitch.id },
+    robur = await prisma.team.create({
+      data: { name: "ASD Robur Natisa", pitch: { connect: { id: pitch.id } } },
+    });
+  }
+
+  let player = await prisma.player.findFirst({ where: { name: { contains: "cencig" } } });
+
+  if (!player) {
+    player = await prisma.player.create({
+      data: {
+        dob: new Date("1993-09-25"),
+        name: "Daniele Cencig",
+        role: "cm",
+        team: { connect: { id: robur.id } },
+        birthPlace: "Livorno",
+      },
     });
   }
 }
