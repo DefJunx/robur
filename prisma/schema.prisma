@@ -1,0 +1,77 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Player {
+  id     String   @id @default(cuid())
+  name   String
+  role   String
+  dob    DateTime
+  teamId String
+  photo  Bytes
+
+  Team Team @relation(fields: [teamId], references: [id])
+}
+
+model Pitch {
+  id      String @id @default(cuid())
+  name    String
+  address String
+
+  Team Team[]
+}
+
+model Team {
+  id      String @id @default(cuid())
+  name    String
+  pitchId String
+
+  homeMatches  Match[]        @relation("homeMatch")
+  awayMatches  Match[]        @relation("awayMatch")
+  pitchAddress Pitch          @relation(fields: [pitchId], references: [id])
+  TeamStanding TeamStanding[]
+  roster       Player[]
+}
+
+model Match {
+  id         String @id @default(cuid())
+  homeTeamId String
+  awayTeamId String
+
+  homeTeam Team @relation("homeMatch", fields: [homeTeamId], references: [id])
+  awayTeam Team @relation("awayMatch", fields: [awayTeamId], references: [id])
+}
+
+model League {
+  id       String @id @default(cuid())
+  division String
+
+  TeamStanding TeamStanding[]
+  LeagueYears  LeagueYears[]
+}
+
+model LeagueYears {
+  id       String   @id @default(cuid())
+  year     DateTime
+  leagueId String
+
+  league League @relation(fields: [leagueId], references: [id])
+}
+
+model TeamStanding {
+  id       String @id @default(cuid())
+  points   Int
+  leagueId String
+  teamId   String
+
+  league League @relation(fields: [leagueId], references: [id])
+  team   Team   @relation(fields: [teamId], references: [id])
+}
